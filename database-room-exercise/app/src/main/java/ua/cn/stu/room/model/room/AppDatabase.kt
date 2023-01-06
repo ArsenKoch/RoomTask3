@@ -10,7 +10,8 @@ import androidx.room.RoomDatabase
 abstract class AppDatabase : RoomDatabase() {
 
     // todo #10: Add abstract getAccountsDao() method
+    abstract fun getAccountsDao()
 
     // todo #18: Add abstract getBoxesDao() method
-
+    abstract fun getBoxesDao()
 }
