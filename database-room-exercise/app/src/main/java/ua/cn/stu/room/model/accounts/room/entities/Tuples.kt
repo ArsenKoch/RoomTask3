@@ -5,7 +5,7 @@ data class AccountSignInTuple(
     val password: String
 )
 
-class AccountUpdateUsernameTuple(
+data class AccountUpdateUsernameTuple(
     val id: Long,
     val username: String
 )
