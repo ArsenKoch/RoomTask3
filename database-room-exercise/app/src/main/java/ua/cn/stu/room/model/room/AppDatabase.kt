@@ -2,6 +2,7 @@ package ua.cn.stu.room.model.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import ua.cn.stu.room.model.accounts.room.AccountsDao
 import ua.cn.stu.room.model.accounts.room.entities.AccountDbEntity
 
 @Database(
@@ -12,9 +13,7 @@ import ua.cn.stu.room.model.accounts.room.entities.AccountDbEntity
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    // todo #10: Add abstract getAccountsDao() method
-    abstract fun getAccountsDao()
+    abstract fun getAccountsDao(): AccountsDao
 
     // todo #18: Add abstract getBoxesDao() method
-    abstract fun getBoxesDao()
 }

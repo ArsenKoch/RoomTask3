@@ -22,5 +22,5 @@ interface AccountsDao {
     suspend fun createAccount(accountDbEntity: AccountDbEntity)
 
     @Query("SELECT * FROM accounts WHERE id = :accountId")
-    suspend fun queryAccountById(accountId: Long): Flow<AccountDbEntity?>
+    fun queryAccountById(accountId: Long): Flow<AccountDbEntity?>
 }
