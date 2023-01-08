@@ -12,6 +12,7 @@ import ua.cn.stu.room.model.accounts.AccountsRepository
 import ua.cn.stu.room.model.accounts.entities.Account
 import ua.cn.stu.room.model.accounts.entities.SignUpData
 import ua.cn.stu.room.model.accounts.room.entities.AccountDbEntity
+import ua.cn.stu.room.model.accounts.room.entities.AccountUpdateUsernameTuple
 import ua.cn.stu.room.model.room.wrapSQLiteException
 import ua.cn.stu.room.model.settings.AppSettings
 import ua.cn.stu.room.utils.AsyncLoader
@@ -97,14 +98,18 @@ class RoomAccountsRepository(
     }
 
     private fun getAccountById(accountId: Long): Flow<Account?> {
-        return accountsDao.queryAccountById(accountId).map { accountDbEntity -> accountDbEntity?.toAccount() }
+        return accountsDao.queryAccountById(accountId)
+            .map { accountDbEntity -> accountDbEntity?.toAccount() }
     }
 
     private suspend fun updateUsernameForAccountId(accountId: Long, newUsername: String) {
-        // todo #14: update username for the account with specified ID.
-        //           hint: use a tuple class created before (step #7)
+        accountsDao.updateUsername(
+            AccountUpdateUsernameTuple(
+                accountId,
+                newUsername
+            )
+        )
     }
 
     private class AccountId(val value: Long)
-
 }
