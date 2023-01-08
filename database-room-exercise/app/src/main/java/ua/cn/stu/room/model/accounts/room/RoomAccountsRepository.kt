@@ -97,7 +97,7 @@ class RoomAccountsRepository(
     }
 
     private fun getAccountById(accountId: Long): Flow<Account?> {
-        TODO("#13: get account info by ID; do not forget to map AccountDbEntity to Account here")
+        return accountsDao.queryAccountById(accountId).map { accountDbEntity -> accountDbEntity?.toAccount() }
     }
 
     private suspend fun updateUsernameForAccountId(accountId: Long, newUsername: String) {
