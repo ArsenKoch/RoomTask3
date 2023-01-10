@@ -31,7 +31,7 @@ object Repositories {
 
     val accountsRepository: AccountsRepository by lazy {
         RoomAccountsRepository(
-            TODO("#22: Use AccountsDao here from AppDatabase"),
+            database.getAccountsDao(),
             appSettings,
             ioDispatcher
         )
