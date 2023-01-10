@@ -15,18 +15,16 @@ class RoomBoxesRepository(
 ) : BoxesRepository {
 
     override suspend fun getBoxesAndSettings(onlyActive: Boolean): Flow<List<BoxAndSettings>> {
-        return accountsRepository.getAccount()
-            .flatMapLatest { account ->
-                if (account == null) return@flatMapLatest flowOf(emptyList())
-                queryBoxesAndSettings(account.id)
+        return accountsRepository.getAccount().flatMapLatest { account ->
+            if (account == null) return@flatMapLatest flowOf(emptyList())
+            queryBoxesAndSettings(account.id)
+        }.mapLatest { boxAndSettings ->
+            if (onlyActive) {
+                boxAndSettings.filter { it.isActive }
+            } else {
+                boxAndSettings
             }
-            .mapLatest { boxAndSettings ->
-                if (onlyActive) {
-                    boxAndSettings.filter { it.isActive }
-                } else {
-                    boxAndSettings
-                }
-            }
+        }
     }
 
     override suspend fun activateBox(box: Box) = wrapSQLiteException(ioDispatcher) {
@@ -38,8 +36,15 @@ class RoomBoxesRepository(
     }
 
     private fun queryBoxesAndSettings(accountId: Long): Flow<List<BoxAndSettings>> {
-        TODO("#19: fetch boxes and settings from BoxesDao and map them to the " +
-                "list of BoxAbdSettings instances")
+        return boxesDao.getBoxesAndSettings(accountId).map { entities ->
+            entities.map {
+                val boxKey = it.key
+                val settingValue = it.value
+                BoxAndSettings(
+                    boxKey.toBox(), settingValue == null || settingValue.isActive
+                )
+            }
+        }
     }
 
     private suspend fun setActiveFlagForBox(box: Box, isActive: Boolean) {
