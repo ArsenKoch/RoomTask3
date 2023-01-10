@@ -40,7 +40,7 @@ object Repositories {
     val boxesRepository: BoxesRepository by lazy {
         RoomBoxesRepository(
             accountsRepository,
-            TODO("#23: Use BoxesDao here from AppDatabase"),
+            database.getBoxesDao(),
             ioDispatcher
         )
     }
