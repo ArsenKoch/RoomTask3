@@ -2,10 +2,12 @@ package ua.cn.stu.room.model.boxes.room
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
+import ua.cn.stu.room.model.AuthException
 import ua.cn.stu.room.model.accounts.AccountsRepository
 import ua.cn.stu.room.model.boxes.BoxesRepository
 import ua.cn.stu.room.model.boxes.entities.Box
 import ua.cn.stu.room.model.boxes.entities.BoxAndSettings
+import ua.cn.stu.room.model.boxes.room.entities.AccountBoxSettingDbEntity
 import ua.cn.stu.room.model.room.wrapSQLiteException
 
 class RoomBoxesRepository(
@@ -48,7 +50,13 @@ class RoomBoxesRepository(
     }
 
     private suspend fun setActiveFlagForBox(box: Box, isActive: Boolean) {
-        // todo #20: get the current account (throw AuthException if there is no logged-in user)
-        //           and then use BoxesDao to activate/deactivate the box for the current account
+        val account = accountsRepository.getAccount().first() ?: throw AuthException()
+        boxesDao.setActiveFlagForBox(
+            AccountBoxSettingDbEntity(
+                accountId = account.id,
+                boxId = box.id,
+                isActive = isActive
+            )
+        )
     }
 }
