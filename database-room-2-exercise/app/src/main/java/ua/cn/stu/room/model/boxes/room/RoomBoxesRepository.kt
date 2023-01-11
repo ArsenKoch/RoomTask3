@@ -8,6 +8,7 @@ import ua.cn.stu.room.model.boxes.BoxesRepository
 import ua.cn.stu.room.model.boxes.entities.Box
 import ua.cn.stu.room.model.boxes.entities.BoxAndSettings
 import ua.cn.stu.room.model.boxes.room.entities.AccountBoxSettingDbEntity
+import ua.cn.stu.room.model.boxes.room.entities.SettingsTuple
 import ua.cn.stu.room.model.room.wrapSQLiteException
 
 class RoomBoxesRepository(
@@ -17,18 +18,16 @@ class RoomBoxesRepository(
 ) : BoxesRepository {
 
     override suspend fun getBoxesAndSettings(onlyActive: Boolean): Flow<List<BoxAndSettings>> {
-        return accountsRepository.getAccount()
-            .flatMapLatest { account ->
-                if (account == null) return@flatMapLatest flowOf(emptyList())
-                queryBoxesAndSettings(account.id)
+        return accountsRepository.getAccount().flatMapLatest { account ->
+            if (account == null) return@flatMapLatest flowOf(emptyList())
+            queryBoxesAndSettings(account.id)
+        }.mapLatest { boxAndSettings ->
+            if (onlyActive) {
+                boxAndSettings.filter { it.isActive }
+            } else {
+                boxAndSettings
             }
-            .mapLatest { boxAndSettings ->
-                if (onlyActive) {
-                    boxAndSettings.filter { it.isActive }
-                } else {
-                    boxAndSettings
-                }
-            }
+        }
     }
 
     override suspend fun activateBox(box: Box) = wrapSQLiteException(ioDispatcher) {
@@ -40,19 +39,18 @@ class RoomBoxesRepository(
     }
 
     private fun queryBoxesAndSettings(accountId: Long): Flow<List<BoxAndSettings>> {
-        return boxesDao.getBoxesAndSettings(accountId)
-            .map { entities ->
-                entities.map {
-                    // todo #7: use embedded entities instead of keys and values;
-                    //          now launch the project and check how it works.
-                    val boxEntity = it.key
-                    val settingsEntity = it.value
-                    BoxAndSettings(
-                        boxEntity.toBox(),
-                        settingsEntity == null || settingsEntity.settings.isActive
-                    )
-                }
+        return boxesDao.getBoxesAndSettings(accountId).map { entities ->
+            entities.map {
+                // todo #7: use embedded entities instead of keys and values;
+                //          now launch the project and check how it works.
+                val boxEntity = it.key
+                val settingsEntity = it.value
+                BoxAndSettings(
+                    boxEntity.toBox(),
+                    settingsEntity == null || settingsEntity.settings.isActive
+                )
             }
+        }
     }
 
     // todo #12: Rewrite queryBoxesAndSettings() method above ^ for usage with database view.
@@ -65,10 +63,7 @@ class RoomBoxesRepository(
         val account = accountsRepository.getAccount().first() ?: throw AuthException()
         boxesDao.setActiveFlagForBox(
             AccountBoxSettingDbEntity(
-                accountId = account.id,
-                boxId = box.id,
-                // todo #4: use embedded entity instead of isActive property
-                isActive = isActive
+                accountId = account.id, boxId = box.id, settings = SettingsTuple(isActive)
             )
         )
     }
