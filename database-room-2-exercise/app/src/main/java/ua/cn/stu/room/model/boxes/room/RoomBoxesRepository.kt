@@ -47,8 +47,10 @@ class RoomBoxesRepository(
                     //          now launch the project and check how it works.
                     val boxEntity = it.key
                     val settingsEntity = it.value
-                    // todo #3: use embedded entity instead of isActive property
-                    BoxAndSettings(boxEntity.toBox(), settingsEntity == null || settingsEntity.isActive)
+                    BoxAndSettings(
+                        boxEntity.toBox(),
+                        settingsEntity == null || settingsEntity.settings.isActive
+                    )
                 }
             }
     }
