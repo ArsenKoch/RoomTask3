@@ -7,10 +7,11 @@ import ua.cn.stu.room.model.accounts.room.entities.AccountDbEntity
 import ua.cn.stu.room.model.boxes.room.BoxesDao
 import ua.cn.stu.room.model.boxes.room.entities.AccountBoxSettingDbEntity
 import ua.cn.stu.room.model.boxes.room.entities.BoxDbEntity
+import ua.cn.stu.room.model.boxes.room.views.SettingsDbView
 
 @Database(
     // todo #10: increment DB version to 2 because we've added a new database view
-    version = 1,
+    version = 2,
     entities = [
         AccountDbEntity::class,
         BoxDbEntity::class,
