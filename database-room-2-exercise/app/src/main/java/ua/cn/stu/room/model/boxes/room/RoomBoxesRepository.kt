@@ -41,8 +41,6 @@ class RoomBoxesRepository(
     private fun queryBoxesAndSettings(accountId: Long): Flow<List<BoxAndSettings>> {
         return boxesDao.getBoxesAndSettings(accountId).map { entities ->
             entities.map { tuple ->
-                // todo #7: use embedded entities instead of keys and values;
-                //          now launch the project and check how it works.
                 val boxEntity = tuple.boxDbEntity
                 val settingsEntity = tuple.settingsEntity
                 BoxAndSettings(
