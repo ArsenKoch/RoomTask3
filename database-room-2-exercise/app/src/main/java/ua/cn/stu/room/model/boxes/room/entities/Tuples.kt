@@ -9,5 +9,5 @@ data class SettingsTuple(
 
 data class BoxAndSettingsTuple(
     @Embedded val boxDbEntity: BoxDbEntity,
-    @Embedded val accountBoxSettingDbEntity: AccountBoxSettingDbEntity?
+    @Embedded val settingsEntity: AccountBoxSettingDbEntity?
 )
