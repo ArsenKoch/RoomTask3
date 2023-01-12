@@ -1,5 +1,6 @@
 package ua.cn.stu.room.model.boxes.room
 
+import android.graphics.Color
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import ua.cn.stu.room.model.AuthException
@@ -40,19 +41,18 @@ class RoomBoxesRepository(
 
     private fun queryBoxesAndSettings(accountId: Long): Flow<List<BoxAndSettings>> {
         return boxesDao.getBoxesAndSettings(accountId).map { entities ->
-            entities.map { tuple ->
-                val boxEntity = tuple.boxDbEntity
-                val settingsEntity = tuple.settingsEntity
+            entities.map { view ->
                 BoxAndSettings(
-                    boxEntity.toBox(),
-                    settingsEntity == null || settingsEntity.settings.isActive
+                    box = Box(
+                        id = view.boxId,
+                        colorName = view.colorName,
+                        colorValue = Color.parseColor(view.colorValue)
+                    ),
+                    isActive = view.settingsTuple.isActive
                 )
             }
         }
     }
-
-    // todo #12: Rewrite queryBoxesAndSettings() method above ^ for usage with database view.
-    //           Uninstall the app from the device, install it again, launch and check all things work correctly.
 
     // todo #16: Rewrite queryBoxesAndSettings() method above ^ again for usage with SettingWithEntitiesTuple.
     //           Uninstall the app from the device, install it again, launch and check all things work correctly.
