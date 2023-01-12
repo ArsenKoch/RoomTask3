@@ -10,14 +10,15 @@ import ua.cn.stu.room.model.boxes.room.entities.BoxDbEntity
 import ua.cn.stu.room.model.boxes.room.views.SettingsDbView
 
 @Database(
-    // todo #10: increment DB version to 2 because we've added a new database view
     version = 2,
     entities = [
         AccountDbEntity::class,
         BoxDbEntity::class,
         AccountBoxSettingDbEntity::class
     ],
-    // todo #9: add a reference to the created database view here (use 'views' argument)
+    views = [
+        SettingsDbView::class
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
 
