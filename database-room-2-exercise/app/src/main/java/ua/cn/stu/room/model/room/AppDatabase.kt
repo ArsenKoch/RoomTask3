@@ -25,5 +25,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getAccountsDao(): AccountsDao
 
     abstract fun getBoxesDao(): BoxesDao
-
 }

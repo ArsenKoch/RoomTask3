@@ -41,21 +41,18 @@ class RoomBoxesRepository(
 
     private fun queryBoxesAndSettings(accountId: Long): Flow<List<BoxAndSettings>> {
         return boxesDao.getBoxesAndSettings(accountId).map { entities ->
-            entities.map { view ->
+            entities.map { settingsTuples ->
                 BoxAndSettings(
                     box = Box(
-                        id = view.boxId,
-                        colorName = view.colorName,
-                        colorValue = Color.parseColor(view.colorValue)
+                        id = settingsTuples.boxDbEntity.id,
+                        colorName = settingsTuples.boxDbEntity.colorName,
+                        colorValue = Color.parseColor(settingsTuples.boxDbEntity.colorValue)
                     ),
-                    isActive = view.settingsTuple.isActive
+                    isActive = settingsTuples.settingsDbView.settingsTuple.isActive
                 )
             }
         }
     }
-
-    // todo #16: Rewrite queryBoxesAndSettings() method above ^ again for usage with SettingWithEntitiesTuple.
-    //           Uninstall the app from the device, install it again, launch and check all things work correctly.
 
     private suspend fun setActiveFlagForBox(box: Box, isActive: Boolean) {
         val account = accountsRepository.getAccount().first() ?: throw AuthException()
