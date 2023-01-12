@@ -10,7 +10,7 @@ import ua.cn.stu.room.model.boxes.room.entities.BoxDbEntity
 import ua.cn.stu.room.model.boxes.room.views.SettingsDbView
 
 @Database(
-    version = 2,
+    version = 1,
     entities = [
         AccountDbEntity::class,
         BoxDbEntity::class,
