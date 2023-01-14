@@ -25,7 +25,7 @@ import ua.cn.stu.room.model.boxes.room.views.SettingDbView
     autoMigrations = [
         AutoMigration(
             from = 1,
-            to = 2
+            to = 2,
         )
     ]
 
@@ -36,5 +36,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getAccountsDao(): AccountsDao
 
     abstract fun getBoxesDao(): BoxesDao
-
 }

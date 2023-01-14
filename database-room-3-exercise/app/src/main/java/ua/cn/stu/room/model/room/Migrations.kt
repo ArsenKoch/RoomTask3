@@ -1,7 +1,8 @@
 package ua.cn.stu.room.model.room
 
-// todo #8: create an AutoMigrationSpec1To2 class derived from the Room's AutoMigrationSpec class.
+import androidx.room.migration.AutoMigrationSpec
 
+class AutoMigrationSpec1To2 : AutoMigrationSpec
 // todo #10: use RenameColumn annotation to tell Room that you want to rename the 'password'
 //           column into a 'hash' column;
 //           Note: if you need to rename more than 1 column within one migration then you need
