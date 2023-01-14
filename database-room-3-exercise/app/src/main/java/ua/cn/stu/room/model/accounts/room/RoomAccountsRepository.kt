@@ -36,18 +36,19 @@ class RoomAccountsRepository(
         return appSettings.getCurrentAccountId() != AppSettings.NO_ACCOUNT_ID
     }
 
-    override suspend fun signIn(email: String, password: CharArray) = wrapSQLiteException(ioDispatcher) {
-        if (email.isBlank()) throw EmptyFieldException(Field.Email)
-        if (password.isEmpty()) throw EmptyFieldException(Field.Password)
+    override suspend fun signIn(email: String, password: CharArray) =
+        wrapSQLiteException(ioDispatcher) {
+            if (email.isBlank()) throw EmptyFieldException(Field.Email)
+            if (password.isEmpty()) throw EmptyFieldException(Field.Password)
 
-        delay(1000)
+            delay(1000)
 
-        val accountId = findAccountIdByEmailAndPassword(email, password)
-        appSettings.setCurrentAccountId(accountId)
-        currentAccountIdFlow.get().value = AccountId(accountId)
+            val accountId = findAccountIdByEmailAndPassword(email, password)
+            appSettings.setCurrentAccountId(accountId)
+            currentAccountIdFlow.get().value = AccountId(accountId)
 
-        return@wrapSQLiteException
-    }
+            return@wrapSQLiteException
+        }
 
     override suspend fun signUp(signUpData: SignUpData) = wrapSQLiteException(ioDispatcher) {
         signUpData.validate()
@@ -72,17 +73,18 @@ class RoomAccountsRepository(
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun updateAccountUsername(newUsername: String) = wrapSQLiteException(ioDispatcher) {
-        if (newUsername.isBlank()) throw EmptyFieldException(Field.Username)
-        delay(1000)
-        val accountId = appSettings.getCurrentAccountId()
-        if (accountId == AppSettings.NO_ACCOUNT_ID) throw AuthException()
+    override suspend fun updateAccountUsername(newUsername: String) =
+        wrapSQLiteException(ioDispatcher) {
+            if (newUsername.isBlank()) throw EmptyFieldException(Field.Username)
+            delay(1000)
+            val accountId = appSettings.getCurrentAccountId()
+            if (accountId == AppSettings.NO_ACCOUNT_ID) throw AuthException()
 
-        updateUsernameForAccountId(accountId, newUsername)
+            updateUsernameForAccountId(accountId, newUsername)
 
-        currentAccountIdFlow.get().value = AccountId(accountId)
-        return@wrapSQLiteException
-    }
+            currentAccountIdFlow.get().value = AccountId(accountId)
+            return@wrapSQLiteException
+        }
 
     override suspend fun getAllData(): Flow<List<AccountFullData>> {
         val account = getAccount().first()
@@ -106,10 +108,12 @@ class RoomAccountsRepository(
 
     private suspend fun findAccountIdByEmailAndPassword(email: String, password: CharArray): Long {
         val tuple = accountsDao.findByEmail(email) ?: throw AuthException()
-        // todo #7: use 'salt' from the tuple and 'password' entered by user to calculate a hash value;
-        //          then compare the calculated hash with the hash stored in the database instead
-        //          of comparing plain passwords. Also do not forget to clear password after usage.
-        if (!tuple.password.toCharArray().contentEquals(password)) throw AuthException()
+
+        val saltBytes = securityUtils.stringToBytes(tuple.salt)
+        val hashBytes = securityUtils.passwordToHash(password, saltBytes)
+        val hashString = securityUtils.bytesToString(hashBytes)
+        password.fill('*')
+        if (tuple.hash != hashString) throw AuthException()
         return tuple.id
     }
 
@@ -133,5 +137,4 @@ class RoomAccountsRepository(
     }
 
     private class AccountId(val value: Long)
-
 }
