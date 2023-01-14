@@ -10,9 +10,9 @@ import ua.cn.stu.room.model.boxes.room.entities.BoxDbEntity
 import ua.cn.stu.room.model.boxes.room.views.SettingDbView
 
 @Database(
-    version = 1,    // todo #1: install the app to your device/emulator; then increment DB version by 1: from 1 to 2.
-                    // todo #13: now let's increment DB version again by 1: from 2 to 3; we will
-                    //           add 'phone' column to the 'accounts' table by hands
+    version = 2,
+    // todo #13: now let's increment DB version again by 1: from 2 to 3; we will
+    //           add 'phone' column to the 'accounts' table by hands
     entities = [
         AccountDbEntity::class,
         BoxDbEntity::class,
