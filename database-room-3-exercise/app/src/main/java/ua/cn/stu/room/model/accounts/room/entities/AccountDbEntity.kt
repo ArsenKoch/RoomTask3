@@ -9,10 +9,7 @@ import ua.cn.stu.room.model.accounts.entities.SignUpData
 import ua.cn.stu.room.utils.security.SecurityUtils
 
 @Entity(
-    tableName = "accounts",
-    indices = [
-        Index("email", unique = true)
-    ]
+    tableName = "accounts", indices = [Index("email", unique = true)]
 )
 data class AccountDbEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long,
@@ -25,23 +22,22 @@ data class AccountDbEntity(
 ) {
 
     fun toAccount(): Account = Account(
-        id = id,
-        email = email,
-        username = username,
-        createdAt = createdAt
+        id = id, email = email, username = username, createdAt = createdAt
     )
 
     companion object {
         fun fromSignUpData(signUpData: SignUpData, securityUtils: SecurityUtils): AccountDbEntity {
-            // todo #4: Use SecurityUtils to generate a random salt and to hash the password
-            //          coming in SignUpData. Also it's a good practice to clear password variables
-            //          after usage (e.g. fill them with '*' char).
-            //          Then assign the generated salt and the calculated hash to the AccountDbEntity properties.
+            val salt = securityUtils.generateSalt()
+            val hash = securityUtils.passwordToHash(signUpData.password, salt)
+            signUpData.password.fill('*')
+            signUpData.repeatPassword.fill('*')
+
             return AccountDbEntity(
                 id = 0, // SQLite generates identifier automatically if ID = 0
                 email = signUpData.email,
                 username = signUpData.username,
-                password = String(signUpData.password),
+                hash = securityUtils.bytesToString(hash),
+                salt = securityUtils.bytesToString(salt),
                 createdAt = System.currentTimeMillis()
                 // todo #15: fill 'phone' column with 'NULL' by default
             )
