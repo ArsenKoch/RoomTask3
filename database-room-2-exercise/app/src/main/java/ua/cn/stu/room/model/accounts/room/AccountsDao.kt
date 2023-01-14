@@ -3,8 +3,10 @@ package ua.cn.stu.room.model.accounts.room
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import ua.cn.stu.room.model.accounts.room.entities.AccountAndEditedBoxesTuple
 import ua.cn.stu.room.model.accounts.room.entities.AccountDbEntity
 import ua.cn.stu.room.model.accounts.room.entities.AccountSignInTuple
 import ua.cn.stu.room.model.accounts.room.entities.AccountUpdateUsernameTuple
@@ -23,8 +25,10 @@ interface AccountsDao {
     @Query("SELECT * FROM accounts WHERE id = :accountId")
     fun getById(accountId: Long): Flow<AccountDbEntity?>
 
-    // todo #18: Add a method for fetching boxes with edited settings (AccountAndEditedBoxesTuple)
-    //           by account id
+    @Transaction
+    @Query("SELECT * FROM accounts WHERE id = :accountId")
+    fun getAccountAndEditedBoxesTuple(accountId: Long): AccountAndEditedBoxesTuple
+
 
     // todo #20: Add a method for fetching all data from the database: all accounts, their settings
     //           and all related boxes.
