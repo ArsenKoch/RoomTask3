@@ -1,5 +1,6 @@
 package ua.cn.stu.room.model.room
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import ua.cn.stu.room.model.accounts.room.AccountsDao
@@ -20,8 +21,13 @@ import ua.cn.stu.room.model.boxes.room.views.SettingDbView
     ],
     views = [
         SettingDbView::class
+    ],
+    autoMigrations = [
+        AutoMigration(
+            from = 1,
+            to = 2
+        )
     ]
-    // todo #2: add autoMigration argument for auto-migrating from the 1st to the 2nd DB version
 
     // todo #9: specify 'spec' argument in the AutoMigration and assign your spec class.
 )
