@@ -26,10 +26,9 @@ import ua.cn.stu.room.model.boxes.room.views.SettingDbView
         AutoMigration(
             from = 1,
             to = 2,
+            spec = AutoMigrationSpec1To2::class
         )
     ]
-
-    // todo #9: specify 'spec' argument in the AutoMigration and assign your spec class.
 )
 abstract class AppDatabase : RoomDatabase() {
 
