@@ -18,8 +18,8 @@ data class AccountDbEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "email", collate = ColumnInfo.NOCASE) val email: String,
     @ColumnInfo(name = "username") val username: String,
-    // todo #3: rename 'password' column to 'hash' and also add a new 'salt' column
-    @ColumnInfo(name = "password") val password: String,
+    @ColumnInfo(name = "hash") val hash: String,
+    @ColumnInfo(name = "salt", defaultValue = "") val salt: String,
     @ColumnInfo(name = "created_at") val createdAt: Long
     // todo #14: add 'phone' column
 ) {
