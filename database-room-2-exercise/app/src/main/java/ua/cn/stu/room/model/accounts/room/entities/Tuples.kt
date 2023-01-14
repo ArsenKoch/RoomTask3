@@ -49,7 +49,7 @@ data class SettingAndBoxTuple(
     @Embedded val settingsDbView: SettingsDbView,
 
     @Relation(
-        parentColumn = "box-id",
+        parentColumn = "box_id",
         entityColumn = "id"
     )
     val boxDbEntity: BoxDbEntity
