@@ -17,8 +17,8 @@ data class AccountDbEntity(
     @ColumnInfo(name = "username") val username: String,
     @ColumnInfo(name = "hash") val hash: String,
     @ColumnInfo(name = "salt", defaultValue = "") val salt: String,
-    @ColumnInfo(name = "created_at") val createdAt: Long
-    // todo #14: add 'phone' column
+    @ColumnInfo(name = "created_at") val createdAt: Long,
+    @ColumnInfo(name = "phone") val phone: String?
 ) {
 
     fun toAccount(): Account = Account(
