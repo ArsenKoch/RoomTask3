@@ -44,10 +44,3 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         database.execSQL("ALTER TABLE accounts ADD phone TEXT")
     }
 }
-
-// todo #18: Before running the project check the database of the installed app; then run the project,
-//           check and compare the databases again.
-
-// todo #19: Do not forget to update pre-packaged database in the assets. It's schema should be the same
-//           as the latest schema of your current database (version 3, with 'hash' and 'salt' columns
-//           instead of 'password' column and with 'phone' column).
