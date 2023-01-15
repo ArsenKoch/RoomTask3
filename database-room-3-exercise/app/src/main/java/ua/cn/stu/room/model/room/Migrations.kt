@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.core.content.contentValuesOf
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ua.cn.stu.room.Repositories
 
@@ -37,9 +38,12 @@ class AutoMigrationSpec1To2 : AutoMigrationSpec {
     }
 }
 
-// todo #16: Create a migration object derived from Migration class. Specify 'from' (2) and 'to' (3)
-//           versions you want to migrate. Override 'migrate' method and use 'ALTER TABLE' SQL-query
-//           in order to add a new 'phone' column to the 'accounts' table.
+val MIGRATION_2_3 = object : Migration(2, 3) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE accounts ADD phone TEXT")
+    }
+}
 
 // todo #18: Before running the project check the database of the installed app; then run the project,
 //           check and compare the databases again.
