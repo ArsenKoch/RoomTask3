@@ -38,8 +38,8 @@ data class AccountDbEntity(
                 username = signUpData.username,
                 hash = securityUtils.bytesToString(hash),
                 salt = securityUtils.bytesToString(salt),
-                createdAt = System.currentTimeMillis()
-                // todo #15: fill 'phone' column with 'NULL' by default
+                createdAt = System.currentTimeMillis(),
+                phone = null
             )
         }
     }
