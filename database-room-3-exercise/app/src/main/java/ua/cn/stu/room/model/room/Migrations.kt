@@ -37,10 +37,6 @@ class AutoMigrationSpec1To2 : AutoMigrationSpec {
     }
 }
 
-// todo #12: Now do not build and run the project. Just check the database content of the already installed
-//           app in the emulator/device. Then build and run the project again and compare it with a new
-//           upgraded database after migration.
-
 // todo #16: Create a migration object derived from Migration class. Specify 'from' (2) and 'to' (3)
 //           versions you want to migrate. Override 'migrate' method and use 'ALTER TABLE' SQL-query
 //           in order to add a new 'phone' column to the 'accounts' table.
