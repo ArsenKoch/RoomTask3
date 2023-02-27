@@ -1,3 +1,1 @@
-Source code of projects from YouTube video tutorials.
-
-Video materials are listed [here](https://www.youtube.com/channel/UCofyDdGnCssPNwABNkxLFKg)
+The final part of the project in which this technology was taken as a basis.
